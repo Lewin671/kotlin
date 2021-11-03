@@ -136,7 +136,7 @@ class BuiltInsLowering(val context: WasmBackendContext) : FileLoweringPass {
                 val isInterface = type.isInterface()
                 val fqName = type.classFqName!!
                 val fqnShouldBeEmitted =
-                    context.configuration.languageVersionSettings.getFlag(AnalysisFlags.allowFullQualityNameInKClass)
+                    context.configuration.languageVersionSettings.getFlag(AnalysisFlags.allowFullyQualifiedNameInKClass)
                 val packageName = if (fqnShouldBeEmitted) fqName.parentOrNull()?.asString() ?: "" else ""
                 val typeName = fqName.shortName().asString()
 

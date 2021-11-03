@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.test.services.configuration
 
 import org.jetbrains.kotlin.config.AnalysisFlag
-import org.jetbrains.kotlin.config.AnalysisFlags.allowFullQualityNameInKClass
+import org.jetbrains.kotlin.config.AnalysisFlags.allowFullyQualifiedNameInKClass
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.config.LanguageVersion
@@ -27,7 +27,7 @@ class CommonEnvironmentConfigurator(testServices: TestServices) : EnvironmentCon
         languageVersion: LanguageVersion
     ): Map<AnalysisFlag<*>, Any?> {
         return super.provideAdditionalAnalysisFlags(directives, languageVersion).toMutableMap().also {
-            it[allowFullQualityNameInKClass] = true
+            it[allowFullyQualifiedNameInKClass] = true
         }
     }
 

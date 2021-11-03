@@ -58,5 +58,5 @@ object AnalysisFlags {
     val builtInsFromSources by AnalysisFlag.Delegates.Boolean
 
     @JvmStatic
-    val allowFullQualityNameInKClass by AnalysisFlag.Delegates.Boolean
+    val allowFullyQualifiedNameInKClass by AnalysisFlag.Delegates.Boolean
 }

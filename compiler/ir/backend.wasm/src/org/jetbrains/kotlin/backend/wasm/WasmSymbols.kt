@@ -13,8 +13,6 @@ import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.ir.backend.js.ReflectionSymbols
-import org.jetbrains.kotlin.ir.builders.declarations.addFunction
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
@@ -29,7 +27,6 @@ import org.jetbrains.kotlin.ir.util.render
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
-import org.jetbrains.kotlin.util.OperatorNameConventions
 import java.lang.IllegalArgumentException
 
 class WasmSymbols(
@@ -47,29 +44,21 @@ class WasmSymbols(
         context.module.getPackage(FqName("kotlin.test"))
 
     internal inner class WasmReflectionSymbols : ReflectionSymbols {
+        override val createKType: IrSimpleFunctionSymbol = getInternalFunction("createKType")
         override val getClassData: IrSimpleFunctionSymbol = getInternalFunction("wasmGetTypeInfoData")
         override val getKClass: IrSimpleFunctionSymbol = getInternalFunction("getKClass")
         override val getKClassFromExpression: IrSimpleFunctionSymbol = getInternalFunction("getKClassFromExpression")
+        override val createDynamicKType: IrSimpleFunctionSymbol get() = error("Dynamic type is not supported by WASM")
+        override val createKTypeParameter: IrSimpleFunctionSymbol = getInternalFunction("createKTypeParameter")
+        override val getStarKTypeProjection = getInternalFunction("getStarKTypeProjection")
+        override val createCovariantKTypeProjection = getInternalFunction("createCovariantKTypeProjection")
+        override val createInvariantKTypeProjection = getInternalFunction("createInvariantKTypeProjection")
+        override val createContravariantKTypeProjection = getInternalFunction("createContravariantKTypeProjection")
+
         override val primitiveClassesObject = getInternalClass("PrimitiveClasses")
+        override val kTypeClass: IrClassSymbol = getIrClass(FqName("kotlin.reflect.KClass"))
 
         val wasmTypeInfoData: IrClassSymbol = getInternalClass("TypeInfoData")
-
-        override val createKType: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val createDynamicKType: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val createKTypeParameter: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val getStarKTypeProjection: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val createCovariantKTypeProjection: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val createInvariantKTypeProjection: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val createContravariantKTypeProjection: IrSimpleFunctionSymbol?
-            get() = TODO("Not yet implemented")
-        override val arrayLiteral: IrSimpleFunctionSymbol
-            get() = TODO("Not yet implemented")
     }
 
     internal val reflectionSymbols: WasmReflectionSymbols = WasmReflectionSymbols()

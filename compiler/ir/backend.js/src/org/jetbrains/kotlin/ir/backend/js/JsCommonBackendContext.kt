@@ -32,8 +32,6 @@ interface JsCommonBackendContext : CommonBackendContext {
 
     val reflectionSymbols: ReflectionSymbols
 
-    val dynamicType: IrDynamicType get() = TODO("Should be removed for WASM backend context")
-
     val inlineClassesUtils: InlineClassesUtils
 
     val coroutineSymbols: JsCommonCoroutineSymbols

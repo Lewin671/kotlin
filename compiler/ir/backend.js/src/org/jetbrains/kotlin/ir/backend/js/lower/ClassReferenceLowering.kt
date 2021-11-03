@@ -8,9 +8,10 @@ package org.jetbrains.kotlin.ir.backend.js.lower
 import org.jetbrains.kotlin.backend.common.BodyLoweringPass
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.ir.Symbols
+import org.jetbrains.kotlin.backend.common.ir.createArrayOfExpression
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.backend.js.*
 import org.jetbrains.kotlin.ir.backend.js.ir.JsIrBuilder
-import org.jetbrains.kotlin.ir.backend.js.utils.toJsArrayLiteral
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
@@ -173,12 +174,13 @@ class ClassReferenceLowering(val context: JsCommonBackendContext) : BodyLowering
         // }
 
         val kClassifier = createKClassifier(classifier, visitedTypeParams)
-        // TODO: Use static array types
-        val arguments = type.arguments.map { createKTypeProjection(it, visitedTypeParams) }.toJsArrayLiteral(
-            context,
-            context.dynamicType,
-            context.dynamicType
+        val arguments = context.createArrayOfExpression(
+            startOffset = UNDEFINED_OFFSET,
+            endOffset = UNDEFINED_OFFSET,
+            arrayElementType = context.reflectionSymbols.kTypeClass.defaultType,
+            arrayElements = type.arguments.map { createKTypeProjection(it, visitedTypeParams) }
         )
+
         val isMarkedNullable = JsIrBuilder.buildBoolean(context.irBuiltIns.booleanType, type.isMarkedNullable())
         return buildCall(
             reflectionSymbols.createKType!!,
@@ -217,10 +219,12 @@ class ClassReferenceLowering(val context: JsCommonBackendContext) : BodyLowering
         visitedTypeParams.add(typeParameter)
 
         val name = JsIrBuilder.buildString(context.irBuiltIns.stringType, typeParameter.name.asString())
-        val upperBounds = typeParameter.superTypes.map { createKType(it, visitedTypeParams) }.toJsArrayLiteral(
-            context,
-            context.dynamicType,
-            context.dynamicType
+
+        val upperBounds = context.createArrayOfExpression(
+            startOffset = UNDEFINED_OFFSET,
+            endOffset = UNDEFINED_OFFSET,
+            arrayElementType = context.reflectionSymbols.kTypeClass.defaultType,
+            arrayElements = typeParameter.superTypes.map { createKType(it, visitedTypeParams) }
         )
 
         val variance = when (typeParameter.variance) {
