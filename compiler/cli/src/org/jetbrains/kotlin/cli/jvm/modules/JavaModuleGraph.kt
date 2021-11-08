@@ -47,11 +47,7 @@ class JavaModuleGraph(finder: JavaModuleFinder) {
                     // Do nothing; all automatic modules should be added to compilation roots at call site as per java.lang.module javadoc
                 }
                 is JavaModule.Explicit -> {
-                    for ((dependencyModuleName) in module.moduleInfo.requires) {
-                        if (visited.add(dependencyModuleName)) {
-                            dfs(dependencyModuleName)
-                        }
-                    }
+                    dfs(moduleName)
                 }
                 else -> error("Unknown module: $module (${module.javaClass})")
             }
