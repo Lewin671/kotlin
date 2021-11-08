@@ -268,7 +268,7 @@ class ClasspathRootsResolver(
         for (moduleName in allDependencies) {
             val module = javaModuleFinder.findModule(moduleName)
             if (module == null) {
-                if (moduleName.startsWith("jdk.internal.")) continue
+                //if (moduleName.startsWith("jdk.internal.")) continue
                 report(ERROR, "Module $moduleName cannot be found in the module graph")
             } else {
                 for ((root, isBinary, isBinarySignature) in module.moduleRoots) {
